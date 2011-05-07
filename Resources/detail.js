@@ -6,7 +6,7 @@ var wc_name = Titanium.UI.createTableViewSection({
 		headerTitle: '化粧室名'
 });
 var wc_name_row = Titanium.UI.createTableViewRow({
-	title:'みなとみらい駅',
+	title:win.data.title,
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
@@ -17,7 +17,7 @@ var rooms = Titanium.UI.createTableViewSection({
 		headerTitle: '個室数'
 });
 var rooms_row = Titanium.UI.createTableViewRow({
-	title:'6',
+	title:win.data.rooms.toString(),
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
@@ -28,7 +28,7 @@ var western = Titanium.UI.createTableViewSection({
 		headerTitle: '洋式'
 });
 var western_row = Titanium.UI.createTableViewRow({
-	title:'3',
+	title:win.data.western.toString(),
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
@@ -39,7 +39,7 @@ var oriental = Titanium.UI.createTableViewSection({
 		headerTitle: '和式'
 });
 var oriental_row = Titanium.UI.createTableViewRow({
-	title:'3',
+	title:win.data.oriental.toString(),
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
@@ -50,7 +50,7 @@ var multi = Titanium.UI.createTableViewSection({
 		headerTitle: '多目的'
 });
 var multi_row = Titanium.UI.createTableViewRow({
-	title:'0',
+	title:win.data.multi.toString(),
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
@@ -71,10 +71,10 @@ data.push(clean_level);
 //
 // CREATE ANNOTATIONS
 //
-var minatomirai = Titanium.Map.createAnnotation({
-	latitude:35.45777561374338,
-	longitude:139.63236808776855,
-	title:'みなとみらい駅',
+var wc_annotation = Titanium.Map.createAnnotation({
+	latitude:win.data.latitude,
+	longitude:win.data.longitude,
+	title:win.data.title,
 	pincolor:Titanium.Map.ANNOTATION_GREEN,
 });
 
@@ -92,11 +92,11 @@ var map_row = Titanium.UI.createTableViewRow({
 });
 var mapview = Titanium.Map.createView({
 	mapType: Titanium.Map.STANDARD_TYPE,
-	region:{latitude:35.45777, longitude:139.63236, latitudeDelta:0.005, longitudeDelta:0.005},
+	region:{latitude:win.data.latitude, longitude:win.data.longitude, latitudeDelta:0.005, longitudeDelta:0.005},
 	animate:true,
 	regionFit:true,
 	userLocation:true,
-	annotations:[minatomirai]
+	annotations:[wc_annotation]
 });
 
 map_row.add(mapview);

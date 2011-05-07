@@ -77,10 +77,11 @@ tableview.addEventListener('click', function(e)
 	Ti.API.info('detail ' + e.detail);
 	//Titanium.UI.createAlertDialog({title:'Table View',message:'row ' + row + ' index ' + index + ' section ' + section  + ' row data ' + rowdata}).show();
 	child_win = Titanium.UI.createWindow({
-			title:'みなとみらい駅',
+			title:e.rowData.title,
 			barColor:'#336699',
 			url:'detail.js'
 	});
+  child_win.data = wc_data[e.index];
 	Titanium.UI.currentTab.open(child_win);
 });
 
