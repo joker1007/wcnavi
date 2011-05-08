@@ -1,50 +1,80 @@
 var win = Titanium.UI.currentWindow;
 
-var data = [];
+// FUNCTION DEFINE
+function getWcPos(wc_data) {
+	switch (wc_data.pos) {
+		case 0:
+			return "ホーム内";
+		case 1:
+			return "改札付近";
+		default:
+			return "その他";
+	}
+}
+
+var table_data = [];
 
 var wc_name = Titanium.UI.createTableViewSection({
 		headerTitle: '化粧室名'
 });
 var wc_name_row = Titanium.UI.createTableViewRow({
-	title:win.data.title,
+	title:win.data.stname + " - " + win.data.liname + " - " + win.data.tname,
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
 wc_name.add(wc_name_row);
-data.push(wc_name);
+table_data.push(wc_name);
+
+var wc_pos = Titanium.UI.createTableViewSection({
+		headerTitle: '場所'
+});
+var wc_pos_row = Titanium.UI.createTableViewRow({
+	title:getWcPos(win.data),
+	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
+	className:'valuerow'
+});
+var wc_posword_row = Titanium.UI.createTableViewRow({
+	title:win.data.posword,
+	height:120,
+	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
+	className:'valuerow'
+});
+wc_pos.add(wc_pos_row);
+wc_pos.add(wc_posword_row);
+table_data.push(wc_pos);
 
 var rooms = Titanium.UI.createTableViewSection({
 		headerTitle: '個室数'
 });
 var rooms_row = Titanium.UI.createTableViewRow({
-	title:win.data.rooms.toString(),
+	title:win.data.room.toString(),
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
 rooms.add(rooms_row);
-data.push(rooms);
+table_data.push(rooms);
 
 var western = Titanium.UI.createTableViewSection({
 		headerTitle: '洋式'
 });
 var western_row = Titanium.UI.createTableViewRow({
-	title:win.data.western.toString(),
+	title:win.data.west.toString(),
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
 western.add(western_row);
-data.push(western);
+table_data.push(western);
 
 var oriental = Titanium.UI.createTableViewSection({
 		headerTitle: '和式'
 });
 var oriental_row = Titanium.UI.createTableViewRow({
-	title:win.data.oriental.toString(),
+	title:win.data.japan.toString(),
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
 oriental.add(oriental_row);
-data.push(oriental);
+table_data.push(oriental);
 
 var multi = Titanium.UI.createTableViewSection({
 		headerTitle: '多目的'
@@ -55,18 +85,18 @@ var multi_row = Titanium.UI.createTableViewRow({
 	className:'valuerow'
 });
 multi.add(multi_row);
-data.push(multi);
+table_data.push(multi);
 
-var clean_level = Titanium.UI.createTableViewSection({
-		headerTitle: '綺麗さ'
+var rate = Titanium.UI.createTableViewSection({
+		headerTitle: '評価'
 });
-var clean_level_row = Titanium.UI.createTableViewRow({
+var rate_row = Titanium.UI.createTableViewRow({
 	title:'★★★★☆',
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
-clean_level.add(clean_level_row);
-data.push(clean_level);
+rate.add(rate_row);
+table_data.push(rate);
 
 //
 // CREATE ANNOTATIONS
@@ -74,8 +104,8 @@ data.push(clean_level);
 var wc_annotation = Titanium.Map.createAnnotation({
 	latitude:win.data.latitude,
 	longitude:win.data.longitude,
-	title:win.data.title,
-	pincolor:Titanium.Map.ANNOTATION_GREEN,
+	title:win.data.stname,
+	pincolor:Titanium.Map.ANNOTATION_GREEN
 });
 
 //
@@ -87,7 +117,6 @@ var map_section = Titanium.UI.createTableViewSection({
 var map_row = Titanium.UI.createTableViewRow({
 		height: 150,
 		selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
-		touchEnabled:false, 
 		className:'maprow'
 });
 var mapview = Titanium.Map.createView({
@@ -95,16 +124,15 @@ var mapview = Titanium.Map.createView({
 	region:{latitude:win.data.latitude, longitude:win.data.longitude, latitudeDelta:0.005, longitudeDelta:0.005},
 	animate:true,
 	regionFit:true,
-	userLocation:true,
 	annotations:[wc_annotation]
 });
 
 map_row.add(mapview);
 map_section.add(map_row);
-data.push(map_section);
+table_data.push(map_section);
 
 var tableview = Titanium.UI.createTableView({
-		data:data,
+		data:table_data,
 		style:Titanium.UI.iPhone.TableViewStyle.GROUPED,
 		backgroundColor:'#fff',
 		rowBackgroundColor:'white'

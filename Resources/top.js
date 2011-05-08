@@ -3,9 +3,19 @@ var win = Titanium.UI.currentWindow;
 // LOAD TEST DATA
 var minatomirai = require("minatomirai");
 var yokohama = require("yokohama");
+var current_loc = {latitude:35.45777, longitude:139.63236};
+
+// FUNCTION DEFINE
+function getWcName(wc_data) {
+	if (wc_data.stin == Ti.App.ST_STIN) {
+		return wc_data.stname;
+	}
+	return wc_data.tname;
+};
+
 
 // NAVIGATION BAR
-var upload_button = Titanium.UI.createButton({title:'投稿'});
+var upload_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.COMPOSE});
 win.rightNavButton = upload_button;
 
 // NAVIGATION BAR EVENT
@@ -30,13 +40,23 @@ wc_data = [
 var wc_annotations = [];
 
 for (var i = 0; i < wc_data.length; i++) {
-	wc_annotations.push(Titanium.Map.createAnnotation({
-		latitude:wc_data[i].latitude,
-		longitude:wc_data[i].longitude,
-		title:wc_data[i].title,
-		pincolor:Titanium.Map.ANNOTATION_GREEN,
-		animate:true
-	}));
+	if (wc_data[i].stin == Ti.App.ST_STIN) {
+		wc_annotations.push(Titanium.Map.createAnnotation({
+			latitude:wc_data[i].latitude,
+			longitude:wc_data[i].longitude,
+			title:wc_data[i].stname,
+			pincolor:Titanium.Map.ANNOTATION_GREEN,
+			animate:true
+		}));
+	} else {
+		wc_annotations.push(Titanium.Map.createAnnotation({
+			latitude:wc_data[i].latitude,
+			longitude:wc_data[i].longitude,
+			title:wc_data[i].tname,
+			pincolor:Titanium.Map.ANNOTATION_PURPLE,
+			animate:true
+		}));
+	}
 }
 
 
@@ -45,7 +65,7 @@ for (var i = 0; i < wc_data.length; i++) {
 //
 var mapview = Titanium.Map.createView({
 	mapType: Titanium.Map.STANDARD_TYPE,
-	region:{latitude:35.45777, longitude:139.63236, latitudeDelta:0.01, longitudeDelta:0.01},
+	region:{latitude:current_loc.latitude, longitude:current_loc.longitude, latitudeDelta:0.01, longitudeDelta:0.01},
 	animate:true,
 	regionFit:true,
 	userLocation:true,
@@ -61,7 +81,7 @@ var tableview = Titanium.UI.createTableView({
 
 for (var i = 0; i < wc_data.length; i++) {
 	tableview.appendRow(Titanium.UI.createTableViewRow({
-		title:wc_data[i].title,
+		title:getWcName(wc_data[i]),
 		hasDetail:true
 	}));
 }
@@ -74,7 +94,6 @@ tableview.addEventListener('click', function(e)
 	var section = e.section;
 	var row = e.row;
 	var rowdata = e.rowData;
-	Ti.API.info('detail ' + e.detail);
 	//Titanium.UI.createAlertDialog({title:'Table View',message:'row ' + row + ' index ' + index + ' section ' + section  + ' row data ' + rowdata}).show();
 	child_win = Titanium.UI.createWindow({
 			title:e.rowData.title,

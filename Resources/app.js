@@ -1,3 +1,11 @@
+// STATUS CONST
+//
+Ti.App.ST_STIN = 1;
+Ti.App.ST_STOUT = 0;
+Ti.App.ST_POS_PLATHOME = 0;
+Ti.App.ST_POS_ENT = 1;
+Ti.App.ST_POS_OTHER = 2;
+
 // this sets the background color of the master UIView (when there are no windows/tab groups on it)
 Titanium.UI.setBackgroundColor('#000');
 
