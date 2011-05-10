@@ -39,52 +39,64 @@ button_win_kai.addEventListener('click', function(e) {
 	var data_win_kai_data = require("data_win_kai");
 	var data_win_kai = [];
 
+	var data_win_kai_col1 = Ti.UI.createPickerColumn();
+
 	for (var kaic = 0; kaic < data_win_kai_data.title.length; kaic++){
 		data_win_kai[kaic] = Ti.UI.createPickerRow();
 		data_win_kai[kaic].title = data_win_kai_data.title[kaic];
 		data_win_kai[kaic].custom_item = data_win_kai_data.custom_item[kaic];
+		data_win_kai[kaic].fontSize = 12;
+		data_win_kai_col1.addRow(data_win_kai[kaic] );
 	}
-	picker_win_kai.add(data_win_kai);
-
-	picker_win_kai.selectionIndicator = true;
-	upload_win_kai.add(picker_win_kai);
-
-	picker_win_kai.addEventListener('change',function(e){
-//		alert(e.rowIndex);
-		var upload_win_kai_sel = Titanium.UI.createWindow({
-			title: '' + data_win_kai[e.rowIndex].title,
-			backgroundColor:'#fff',
-			barColor:'#336699'
-//		url:'upload.js'
-		});
-		Titanium.UI.currentTab.open(upload_win_kai_sel, {animated:true});
-		
-		var picker_win_kai_wc = Ti.UI.createPicker();
+	picker_win_kai.top = 30;
+	
 		var data_win_kai_wc_data = require("data_win_kai_wc");
 		var data_win_kai_wc = [];
+	
+		var data_win_kai_col2 = Ti.UI.createPickerColumn();
 	
 		for (var kaic2 = 0; kaic2 < data_win_kai_wc_data.location.length; kaic2++){
 			data_win_kai_wc[kaic2] = Ti.UI.createPickerRow();			
 			data_win_kai_wc[kaic2].title = data_win_kai_wc_data.sex[kaic2] + ':' + data_win_kai_wc_data.location[kaic2] +' - '  + data_win_kai_wc_data.comment[kaic2];
 			data_win_kai_wc[kaic2].custom_item = data_win_kai_wc_data.custom_item[kaic2];
+			data_win_kai_wc[kaic2].fontSize = 12;
+			data_win_kai_col2.addRow(data_win_kai_wc[kaic2] );	
 		}
-		data_win_kai_wc[data_win_kai_wc_data.location.length] = Ti.UI.createPickerRow();	
-		data_win_kai_wc[kaic2].title = '上記以外の化粧室';
-		data_win_kai_wc[kaic2].custom_item = data_win_kai_wc_data.location.length;
 		
-		picker_win_kai_wc.add(data_win_kai_wc);
+		data_win_kai_wc[data_win_kai_wc_data.location.length] = Ti.UI.createPickerRow();	
+		data_win_kai_wc[data_win_kai_wc_data.location.length].title = '上記以外の化粧室';
+		data_win_kai_wc[data_win_kai_wc_data.location.length].custom_item = data_win_kai_wc_data.location.length;
+		data_win_kai_wc[data_win_kai_wc_data.location.length].fontSize = 12;
+		data_win_kai_col2.addRow(data_win_kai_wc[data_win_kai_wc_data.location.length] );	
+	
+	picker_win_kai.add([data_win_kai_col1,data_win_kai_col2]);
 
-		picker_win_kai_wc.selectionIndicator = true;
-		upload_win_kai_sel.add(picker_win_kai_wc);
+	picker_win_kai.selectionIndicator = true;
+	
+	var button_win_kai_go = Titanium.UI.createButton({
+  title:'進む',
+  color:'#000000',
+  height:40,
+  width:100,
+  top:280,
+  left:110,
+   font:{fontSize:18}
+});
+	
+	upload_win_kai.add(picker_win_kai);
+	upload_win_kai.add(button_win_kai_go);
 
-		picker_win_kai_wc.addEventListener('change',function(e){
+	picker_win_kai.addEventListener('change',function(e){
 
-			if(e.rowIndex == data_win_kai_wc_data.location.length){
-				alert("");
-			} else {
-			
+		if(e.columnIndex == 0){	
+		}
+	});	
+	
+	
+		button_win_kai_go.addEventListener('click',function(e){
+
 	var winpos = Titanium.UI.createWindow({
-		title: '' + data_win_kai_wc[e.rowIndex].title,
+		title: '化粧室コメント登録',
 		backgroundColor:'#fff',
 		barColor:'#336699'
 //		url:'upload.js'
@@ -102,25 +114,17 @@ var text_field_option = {
 };
 
 var wc_name1 = Titanium.UI.createTableViewSection({
-		headerTitle: '' + data_win_kai[e.rowIndex].title
+		headerTitle: '駅名'
 });
 
 var wc_name2 = Titanium.UI.createTableViewSection({
-		headerTitle: '' + data_win_kai_wc[e.rowIndex].title
+		headerTitle: 'トイレ名'
 });
 
-/*
-var wc_name_row = Titanium.UI.createTableViewRow({
-	height:50,
-	className:'textfield'
-});
-var wc_name_tf = Titanium.UI.createTextField(text_field_option);
-wc_name_tf.hintText = "化粧室名";
-wc_name_row.add(wc_name_tf);
-wc_name.add(wc_name_row);
-*/
+
 data.push(wc_name1);
 data.push(wc_name2);
+
 /*
 var rooms = Titanium.UI.createTableViewSection({
 		headerTitle: '個室数'
@@ -174,21 +178,40 @@ multi_row.add(multi_tf);
 multi.add(multi_row);
 data.push(multi);
 */
+
+
 var clean_level = Titanium.UI.createTableViewSection({
 		headerTitle: '綺麗さ'
 });
 var clean_level_row = Titanium.UI.createTableViewRow({
+		borderWidth: 0,
 	height:30,
-	className:'buttonbar'
+	className:'TabbedBar'
 });
 
-var clean_level_bb = Titanium.UI.createButtonBar({
+var ToilePosTB1 = Titanium.UI.createTabbedBar({
+    index:2,
+//	font:{fontSize:10},
+    labels:['★', '★★','★★★','★★★★','★★★★★'],
+//	labels:rank_object01,
+//	top:240,
+    style:Titanium.UI.iPhone.SystemButtonStyle.BAR,
+  backgroundColor:'#00F',
+//  backgroundSelectedColor:'#FFF'
+	height:33,
+//		left:3,
+  //  width:314
+});
+
+/*var clean_level_bb = Titanium.UI.createButtonBar({
 	labels:['★☆☆☆☆', '★★☆☆☆', '★★☆☆☆', '★★☆☆☆'],
 	font:{fontSize:10}
-});
-clean_level_row.add(clean_level_bb);
+});*/
+clean_level_row.add(ToilePosTB1);
 clean_level.add(clean_level_row);
 data.push(clean_level);
+
+
 
 var wc_pos_kai_coment = Titanium.UI.createTableViewSection({
 		headerTitle: 'コメント(空白可)'
@@ -243,14 +266,10 @@ var tableview = Titanium.UI.createTableView({
 		rowBackgroundColor:'white'
 });
 			
-			
 			winpos.add(tableview);
 			
-			}
 		});
-
-	});	
-	
+		
 });
 
 
