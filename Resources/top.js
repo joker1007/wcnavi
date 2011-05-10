@@ -45,6 +45,7 @@ for (var i = 0; i < wc_data.length; i++) {
 			latitude:wc_data[i].latitude,
 			longitude:wc_data[i].longitude,
 			title:wc_data[i].stname,
+			image: "toilet_and_shadow.png",
 			pincolor:Titanium.Map.ANNOTATION_GREEN,
 			animate:true
 		}));
