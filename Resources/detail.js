@@ -105,6 +105,7 @@ var wc_annotation = Titanium.Map.createAnnotation({
 	latitude:win.data.latitude,
 	longitude:win.data.longitude,
 	title:win.data.stname,
+	image:"toilet_and_shadow.png",
 	pincolor:Titanium.Map.ANNOTATION_GREEN
 });
 

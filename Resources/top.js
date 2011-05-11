@@ -3,7 +3,7 @@ var win = Titanium.UI.currentWindow;
 // LOAD TEST DATA
 var minatomirai = require("minatomirai");
 var yokohama = require("yokohama");
-var current_loc = {latitude:35.45777, longitude:139.63236};
+//var current_loc = {lat:35.45777, lon:139.63236};
 
 // FUNCTION DEFINE
 function getWcName(wc_data) {
@@ -33,6 +33,12 @@ wc_data = [
 	minatomirai,
 	yokohama
 ];
+
+// GEOLOCATION
+//
+Titanium.Geolocation.purpose = '現在の位置情報を利用して、近くにあるトイレを検索する';
+Ti.include("lib/get_location.js");
+setCurrentPosition();
 
 //
 // CREATE ANNOTATIONS
@@ -66,13 +72,18 @@ for (var i = 0; i < wc_data.length; i++) {
 //
 var mapview = Titanium.Map.createView({
 	mapType: Titanium.Map.STANDARD_TYPE,
-	region:{latitude:current_loc.latitude, longitude:current_loc.longitude, latitudeDelta:0.01, longitudeDelta:0.01},
+	region:{latitude:current_loc.lat, longitude:current_loc.lon, latitudeDelta:0.01, longitudeDelta:0.01},
 	animate:true,
 	regionFit:true,
 	userLocation:true,
 	annotations:wc_annotations,
 	top: 0,
 	height: 200
+});
+
+// 位置情報取得後に表示領域を更新
+Ti.App.addEventListener('setlocation', function(e) {
+	mapview.setLocation({latitude:e.lat, longitude:e.lon, latitudeDelta:0.01, longitudeDelta:0.01});
 });
 
 // create table view
