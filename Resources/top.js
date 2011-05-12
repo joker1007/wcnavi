@@ -34,8 +34,9 @@ function getWcName(wc_data) {
 };
 
 function createWcAnnotation(toilet){
+  var annotation = null;
 	if (toilet.stin == Ti.App.ST_STIN) {
-		var annotation = Titanium.Map.createAnnotation({
+		annotation = Titanium.Map.createAnnotation({
 			latitude:toilet.lat,
 			longitude:toilet.lon,
 			title:toilet.stname,
@@ -44,7 +45,7 @@ function createWcAnnotation(toilet){
 			animate:true
 		});
 	} else {
-		var annotation = Titanium.Map.createAnnotation({
+		annotation = Titanium.Map.createAnnotation({
 			latitude:toilet.lat,
 			longitude:toilet.lon,
 			title:toilet.tname,
@@ -66,7 +67,6 @@ var mapview = Titanium.Map.createView({
 	animate:true,
 	regionFit:true,
 	userLocation:true,
-	annotations:wc_annotations,
 	top: 0,
 	height: 200
 });
