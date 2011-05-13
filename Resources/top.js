@@ -9,15 +9,24 @@ var yokohama = require("yokohama");
 var upload_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.COMPOSE});
 win.rightNavButton = upload_button;
 
-// NAVIGATION BAR EVENT
-upload_button.addEventListener('click', function(e) {
+var button_win_kai = Titanium.UI.createButton({
+  title:'駅改札内の化粧室',
+  color:'#000000',
+  height:40,
+  width:230,
+  top:80,
+  left:45,
+   font:{fontSize:18}
+});
 
-	var upload_win = Titanium.UI.createWindow({
-		backgroundImage:'./hantomei.png',
-		url:'upload.js'
-	});
-		upload_win.open({transition: Ti.UI.iPhone.AnimationStyle.NONE});
-
+var button_win_nor= Titanium.UI.createButton({
+  title:'それ以外の化粧室',
+  color:'#000000',
+  height:40,
+  width:230,
+  top:160,
+  left:45,
+   font:{fontSize:18}
 });
 
 wc_data = [
@@ -117,7 +126,7 @@ var location_button = Titanium.UI.createButton({
   style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
 });
 
-win.setToolbar([location_button, flexible, search])
+win.setToolbar([location_button, flexible, search]);
 
 win.add(mapview);
 win.add(tableview);
@@ -164,4 +173,41 @@ Ti.App.addEventListener('setlocation', function(e) {
 	};
 
 	xhr.send();
+});
+
+
+	var upload_win = Titanium.UI.createWindow({
+		backgroundImage:'./hantomei.png'
+//		url:'upload.js'
+	});
+
+// NAVIGATION BAR EVENT
+upload_button.addEventListener('click', function(e) {
+
+upload_win.add(button_win_kai);
+upload_win.add(button_win_nor);
+
+		upload_win.open({transition: Ti.UI.iPhone.AnimationStyle.NONE});
+
+});
+
+
+
+Ti.include('lib/map_mode_change.js');
+
+//var win = Titanium.UI.currentWindow;
+
+var cancel_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.CANCEL});
+
+
+button_win_kai.addEventListener('click', function(e) {
+	upload_win.close();
+	mapModeEdit();
+	win.rightNavButton = cancel_button;
+
+	cancel_button.addEventListener('click', function(e) {
+		mapModeNormal();
+		win.rightNavButton = upload_button;
+	});
+
 });
