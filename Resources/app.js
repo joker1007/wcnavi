@@ -15,13 +15,15 @@ var win1 = Titanium.UI.createWindow({
 		title:'近くの化粧室',
 		backgroundColor:'#fff',
 		barColor:'#336699',
-		url:'top.js'
+		url:'top.js',
+		tabBarHidden:true
 });
 
 var win2 = Titanium.UI.createWindow({  
 		title:'sub',
 		backgroundColor:'#fff',
-		barColor:'#336699'
+		barColor:'#336699',
+		tabBarHidden:true
 });
 
 var tab1 = Titanium.UI.createTab({
