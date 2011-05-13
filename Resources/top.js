@@ -7,17 +7,27 @@ var yokohama = require("yokohama");
 
 // NAVIGATION BAR
 var upload_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.COMPOSE});
+var cancel_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.CANCEL});
 win.rightNavButton = upload_button;
 
 // NAVIGATION BAR EVENT
 upload_button.addEventListener('click', function(e) {
-	var upload_win = Titanium.UI.createWindow({
-		title: '化粧室情報の投稿',
-		backgroundColor:'#fff',
-		barColor:'#336699',
-		url:'upload.js'
-	});
-	Titanium.UI.currentTab.open(upload_win, {animated:true});
+	/*
+	 *var upload_win = Titanium.UI.createWindow({
+	 *  title: '化粧室情報の投稿',
+	 *  backgroundColor:'#fff',
+	 *  barColor:'#336699',
+	 *  url:'upload.js'
+	 *});
+	 */
+	//Titanium.UI.currentTab.open(upload_win, {animated:true});
+	mapModeEdit();
+	win.rightNavButton = cancel_button;
+});
+
+cancel_button.addEventListener('click', function(e) {
+	mapModeNormal();
+	win.rightNavButton = upload_button;
 });
 
 wc_data = [
@@ -57,10 +67,26 @@ function createWcAnnotation(toilet){
 	return annotation;
 }
 
+function createStationAnnotation(station){
+  var annotation = null;
+	annotation = Titanium.Map.createAnnotation({
+		latitude:station.lat,
+		longitude:station.lon,
+		title:station.stname,
+		pincolor:Titanium.Map.ANNOTATION_GREEN,
+		animate:true
+	});
+	return annotation;
+}
+
+Ti.include("lib/map_mode_change.js");
+Ti.include("lib/get_remote_object.js");
+
 
 //
 // CREATE MAP VIEW
 //
+var base_region = {};
 var mapview = Titanium.Map.createView({
 	mapType: Titanium.Map.STANDARD_TYPE,
 	region:{latitude:35.45777, longitude:139.63236, latitudeDelta:0.01, longitudeDelta:0.01},
@@ -69,6 +95,22 @@ var mapview = Titanium.Map.createView({
 	userLocation:true,
 	top: 0,
 	height: 200
+});
+
+mapview.addEventListener('regionChanged', function(e) {
+	if (base_region.latitude && base_region.longitude) {
+		var lat_delta = base_region.latitude - e.latitude;
+		var lon_delta = base_region.longitude - e.longitude;
+		var distance = Math.sqrt(Math.pow(lat_delta, 2) + Math.pow(lon_delta, 2));
+		if (distance > 0.02) {
+			getToilet(e.latitude, e.longitude, function(annos) {
+				base_region.latitude = e.latitude;
+				base_region.longitude = e.longitude;
+				mapview.removeAllAnnotations();
+				mapview.addAnnotations(annos);
+			});
+		}
+	}
 });
 
 // create table view
@@ -117,7 +159,7 @@ var location_button = Titanium.UI.createButton({
   style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
 });
 
-win.setToolbar([location_button, flexible, search])
+win.setToolbar([location_button, flexible, search]);
 
 win.add(mapview);
 win.add(tableview);
@@ -132,6 +174,8 @@ setCurrentPosition();
 // 位置情報取得後に表示領域を更新
 Ti.App.addEventListener('setlocation', function(e) {
 	mapview.setLocation({latitude:e.lat, longitude:e.lon, latitudeDelta:0.01, longitudeDelta:0.01});
+	base_region.latitude = e.lat;
+	base_region.longitude = e.lon;
 	if (Titanium.Network.online == false) {
 		Titanium.UI.createAlertDialog({
 			title:'通信エラー',
@@ -141,27 +185,8 @@ Ti.App.addEventListener('setlocation', function(e) {
 		return;
 	}
 
-	var xhr = Titanium.Network.createHTTPClient();
-	xhr.open('GET', 'http://wcnavix.appspot.com/search?lat='+e.lat+'&lon='+e.lon+'&sort=distance');
+	getToilet(e.lat, e.lon, function(e) {
+		mapview.addAnnotations(e);
+	});
 
-	xhr.onload = function(){
-		var result = JSON.parse(this.responseText);
-		if (result.res == 0) {
-			var annotations = [];
-			for (var i = 0; i < result.toilets.length; i++) {
-				annotations.push(createWcAnnotation(result.toilets[i]));
-			}
-			mapview.addAnnotations(annotations);
-		}
-	};
-
-	xhr.onerror = function(){
-		Titanium.UI.createAlertDialog({
-			title:'通信エラー',
-			message:'サーバーに接続できません',
-			buttonNames:["OK"]
-		}).show();
-	};
-
-	xhr.send();
 });
