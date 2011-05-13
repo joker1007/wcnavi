@@ -11,13 +11,13 @@ win.rightNavButton = upload_button;
 
 // NAVIGATION BAR EVENT
 upload_button.addEventListener('click', function(e) {
+
 	var upload_win = Titanium.UI.createWindow({
-		title: '化粧室情報の投稿',
-		backgroundColor:'#fff',
-		barColor:'#336699',
+		backgroundImage:'./hantomei.png',
 		url:'upload.js'
 	});
-	Titanium.UI.currentTab.open(upload_win, {animated:true});
+		upload_win.open({transition: Ti.UI.iPhone.AnimationStyle.NONE});
+
 });
 
 wc_data = [
