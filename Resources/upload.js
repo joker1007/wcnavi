@@ -5,7 +5,7 @@ var button_win_kai = Titanium.UI.createButton({
   color:'#000000',
   height:40,
   width:230,
-  top:50,
+  top:80,
   left:45,
    font:{fontSize:18}
 });
@@ -15,7 +15,7 @@ var button_win_nor= Titanium.UI.createButton({
   color:'#000000',
   height:40,
   width:230,
-  top:120,
+  top:160,
   left:45,
    font:{fontSize:18}
 });

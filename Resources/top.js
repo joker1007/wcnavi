@@ -3,37 +3,59 @@ var win = Titanium.UI.currentWindow;
 // LOAD TEST DATA
 var minatomirai = require("minatomirai");
 var yokohama = require("yokohama");
-//var current_loc = {lat:35.45777, lon:139.63236};
-
-// NAVIGATION BAR
-var upload_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.COMPOSE});
-var cancel_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.CANCEL});
-win.rightNavButton = upload_button;
-
-// NAVIGATION BAR EVENT
-upload_button.addEventListener('click', function(e) {
-	/*
-	 *var upload_win = Titanium.UI.createWindow({
-	 *  title: '化粧室情報の投稿',
-	 *  backgroundColor:'#fff',
-	 *  barColor:'#336699',
-	 *  url:'upload.js'
-	 *});
-	 */
-	//Titanium.UI.currentTab.open(upload_win, {animated:true});
-	mapModeEdit();
-	win.rightNavButton = cancel_button;
-});
-
-cancel_button.addEventListener('click', function(e) {
-	mapModeNormal();
-	win.rightNavButton = upload_button;
-});
 
 wc_data = [
 	minatomirai,
 	yokohama
 ];
+
+// アップロードモード選択ウインドウ
+var upload_win = Titanium.UI.createWindow({
+		backgroundImage:'./hantomei.png'
+});
+var button_win_kai = Titanium.UI.createButton({
+	title:'駅改札内の化粧室',
+	color:'#000000',
+	height:40,
+	width:230,
+	top:80,
+	left:45,
+	font:{fontSize:18}
+});
+button_win_kai.addEventListener('click', function(e) {
+	upload_win.close();
+	mapModeEdit();
+	win.rightNavButton = cancel_button;
+});
+
+var button_win_nor= Titanium.UI.createButton({
+	title:'それ以外の化粧室',
+	color:'#000000',
+	height:40,
+	width:230,
+	top:160,
+	left:45,
+	font:{fontSize:18}
+});
+
+upload_win.add(button_win_kai);
+upload_win.add(button_win_nor);
+
+
+// NAVIGATION BAR
+var upload_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.COMPOSE});
+upload_button.addEventListener('click', function(e) {
+	upload_win.open();
+});
+
+var cancel_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.CANCEL});
+cancel_button.addEventListener('click', function(e) {
+	mapModeNormal();
+	win.rightNavButton = upload_button;
+});
+
+win.rightNavButton = upload_button;
+
 
 // FUNCTION DEFINE
 function getWcName(wc_data) {
@@ -190,3 +212,8 @@ Ti.App.addEventListener('setlocation', function(e) {
 	});
 
 });
+
+
+
+
+
