@@ -101,6 +101,24 @@ tableview.addEventListener('click', function(e)
 	Titanium.UI.currentTab.open(child_win);
 });
 
+
+// CREATE Toolbar Button
+var flexible = Titanium.UI.createButton({
+  systemButton:Titanium.UI.iPhone.SystemButtonStyle.FLEXIBLE_SPACE
+});
+
+var search = Titanium.UI.createButton({
+  title:'詳細検索',
+  style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
+});
+
+var location_button = Titanium.UI.createButton({
+  title:'位置取得',
+  style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
+});
+
+win.setToolbar([location_button, flexible, search])
+
 win.add(mapview);
 win.add(tableview);
 
