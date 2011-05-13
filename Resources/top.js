@@ -180,12 +180,11 @@ Ti.App.addEventListener('setlocation', function(e) {
 		backgroundImage:'./hantomei.png'
 //		url:'upload.js'
 	});
+upload_win.add(button_win_kai);
+upload_win.add(button_win_nor);
 
 // NAVIGATION BAR EVENT
 upload_button.addEventListener('click', function(e) {
-
-upload_win.add(button_win_kai);
-upload_win.add(button_win_nor);
 
 		upload_win.open({transition: Ti.UI.iPhone.AnimationStyle.NONE});
 
@@ -198,16 +197,14 @@ Ti.include('lib/map_mode_change.js');
 //var win = Titanium.UI.currentWindow;
 
 var cancel_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.CANCEL});
-
+cancel_button.addEventListener('click', function(e) {
+		mapModeNormal();
+		win.rightNavButton = upload_button;
+	});
 
 button_win_kai.addEventListener('click', function(e) {
 	upload_win.close();
 	mapModeEdit();
 	win.rightNavButton = cancel_button;
-
-	cancel_button.addEventListener('click', function(e) {
-		mapModeNormal();
-		win.rightNavButton = upload_button;
-	});
 
 });

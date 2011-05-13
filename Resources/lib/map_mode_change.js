@@ -1,6 +1,8 @@
 var guide_label = null;
 
 function createLabel() {
+
+	if (guide_label == null) {
 	guide_label = Titanium.UI.createLabel({
 		text:'投稿したい駅を選択してください',
 		textAlign:'center',
@@ -13,6 +15,10 @@ function createLabel() {
 		top:338
 	});
 	Titanium.UI.currentWindow.add(guide_label);
+	} else {
+		guide_label.show();
+	}
+
 }
 
 function mapModeEdit() {
