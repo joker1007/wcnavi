@@ -11,7 +11,7 @@ wc_data = [
 
 // アップロードモード選択ウインドウ
 var upload_win = Titanium.UI.createWindow({
-		backgroundImage:'./hantomei.png'
+		backgroundImage:'./img/hantomei.png'
 });
 var button_win_kai = Titanium.UI.createButton({
 	title:'駅改札内の化粧室',
@@ -177,8 +177,9 @@ var search = Titanium.UI.createButton({
 });
 
 var location_button = Titanium.UI.createButton({
-  title:'位置取得',
-  style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
+//  title:'位置取得',
+	image:'./img/GPS.png',
+	style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
 });
 
 win.setToolbar([location_button, flexible, search]);
