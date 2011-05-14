@@ -99,15 +99,16 @@ function appendSuggestRow(item) {
 	var row = {};
 	if (item.stname) {
 		row = Titanium.UI.createTableViewRow({
-			title:item.stname + "駅"
+			title:item.stname + "駅",
+			data_obj:item.toilets
 		});
 	} else {
 		row = Titanium.UI.createTableViewRow({
-			title:item.tname
+			title:item.tname,
+			data_obj:item
 		});
 	}
 	row.hasDetail = true;
-	row.item_obj = item;
 
 	tableview.appendRow(row);
 }
@@ -174,18 +175,12 @@ var tableview = Titanium.UI.createTableView({
 // create table view event listener
 tableview.addEventListener('click', function(e)
 {
-	// event data
-	var index = e.index;
-	var section = e.section;
-	var row = e.row;
-	var rowdata = e.rowData;
-	//Titanium.UI.createAlertDialog({title:'Table View',message:'row ' + row + ' index ' + index + ' section ' + section  + ' row data ' + rowdata}).show();
 	child_win = Titanium.UI.createWindow({
 			title:e.rowData.title,
 			barColor:'#336699',
 			url:'semi_detail.js'
 	});
-  child_win.data = e.rowData.item_obj;
+  child_win.data = e.rowData.data_obj;
 	Titanium.UI.currentTab.open(child_win);
 });
 
