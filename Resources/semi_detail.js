@@ -38,12 +38,24 @@ win.data.forEach(function(elm, index, array) {
 		current_section.headerTitle = elm.liname;
 		sections.push(current_section);
 	}
-	
-	current_section.add(Titanium.UI.createTableViewRow({
+
+	var row = Titanium.UI.createTableViewRow({
 		title:getWcPos(elm) + "/" + elm.posinfo,
 		hasDetail:true,
 		data_obj:elm
-	}));
+	});
+
+	row.addEventListener('click', function(e) {
+		child_win = Titanium.UI.createWindow({
+				title:e.rowData.title,
+				barColor:'#336699',
+				url:'detail.js'
+		});
+		child_win.data = e.rowData.data_obj;
+		Titanium.UI.currentTab.open(child_win);
+	});
+
+	current_section.add(row);
 });
 
 
