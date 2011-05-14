@@ -40,7 +40,7 @@ win.data.forEach(function(elm, index, array) {
 	}
 
 	var row = Titanium.UI.createTableViewRow({
-		title:getWcPos(elm) + "/" + elm.posinfo,
+		title:getWcPos(elm) + " - " + elm.posinfo,
 		hasDetail:true,
 		data_obj:elm
 	});

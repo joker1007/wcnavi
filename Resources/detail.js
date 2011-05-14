@@ -15,16 +15,45 @@ function getWcPos(wc_data) {
 var table_data = [];
 
 var wc_name = Titanium.UI.createTableViewSection({
-		headerTitle: '化粧室名'
+		headerTitle: '登録名: ' + win.data.tname + " - " + win.data.liname,
+
 });
-var wc_name_row = Titanium.UI.createTableViewRow({
-	title:win.data.liname + " - " + win.data.tname,
-	height: 30,
+
+table_data.push(wc_name);
+
+var wc_tid = Titanium.UI.createTableViewSection({
+		headerTitle: '(登録: ' + win.data.uid + ')',
+//			backgroundImage:'./img/40.png',
+		bottom:20
+});
+
+table_data.push(wc_tid);
+
+var rate_label = Titanium.UI.createLabel({
+	height:'auto',
+	width:'auto',
+	left:115,
+	backgroundImage:'./img/40.png'
+});
+
+var rate = Titanium.UI.createTableViewSection({
+		headerTitle: '評価'
+});
+
+var rate_row = Titanium.UI.createTableViewRow({
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
-wc_name.add(wc_name_row);
-table_data.push(wc_name);
+
+rate_row.add(rate_label);
+rate.add(rate_row);
+table_data.push(rate);
+
+
+var wc_toroku = Titanium.UI.createTableViewSection({
+		headerTitle: '登録情報'
+});
+
 
 var wc_pos = Titanium.UI.createTableViewSection({
 		headerTitle: '場所'
@@ -67,27 +96,7 @@ rooms.add(rooms_row_head);
 rooms.add(rooms_row);
 table_data.push(rooms);
 
-var rate = Titanium.UI.createTableViewSection({
-		headerTitle: '評価'
-});
-var rate_row = Titanium.UI.createTableViewRow({
-	height:30,
-	left: 130,
-	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
-	className:'valuerow'
-});
 
-var rate_label = Titanium.UI.createLabel({
-	height:'auto',
-	width:'auto',
-	left:115,
-	backgroundImage:'./img/40.png'
-});
-
-
-rate_row.add(rate_label);
-rate.add(rate_row);
-table_data.push(rate);
 
 //
 // CREATE ANNOTATIONS
