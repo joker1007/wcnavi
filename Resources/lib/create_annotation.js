@@ -62,7 +62,7 @@ function createStationAnnotation(station){
 			});
 			child_win.data = e.source.data_obj;
 			Titanium.UI.currentTab.open(child_win);
-		})
+		});
 		alert_dialog.show();
 	});
 	return annotation;
