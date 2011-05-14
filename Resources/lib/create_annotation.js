@@ -54,7 +54,7 @@ function createStationAnnotation(station){
 			message:e.source.title + "の情報を登録しますか？",
 			buttonNames:["OK", "Cancel"]
 		});
-		alert_dialog.addEventListener(('click', function(ev) {
+		alert_dialog.addEventListener('click', function(ev) {
 			child_win = Titanium.UI.createWindow({
 					title:e.source.title,
 					barColor:'#336699',
