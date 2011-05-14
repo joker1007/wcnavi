@@ -32,14 +32,6 @@ function mapModeEdit() {
 		var st_annotations = [];
 		for (var i = 0; i < stations.length; i++) {
 			var st_annotation = createStationAnnotation(stations[i]);
-			st_annotation.addEventListener("click", function(e) {
-				var alert_dialog = Titanium.UI.createAlertDialog({
-					title:'投稿確認',
-					message:e.source.title + "の情報を登録しますか？",
-					buttonNames:["OK", "Cancel"]
-				});
-				alert_dialog.show();
-			});
 			st_annotations.push(st_annotation);
 		}
 		mapview.removeAllAnnotations();
@@ -68,4 +60,7 @@ function labelHide(label) {
 function mapModeNormal() {
 	labelHide(guide_label);
 	mapShrink(mapview);
+	mapview.removeAllAnnotations();
+	mapview.addEventListener('regionChanged', map_normal_callback);
+	mapview.removeEventListener('regionChanged', map_edit_callback);
 }

@@ -48,16 +48,22 @@ function createStationAnnotation(station){
 		animate:true
 	});
 
-	annotation.addEventListener('click', function(e) {
-		if (e.clicksource == 'rightButton') {
+	annotation.addEventListener("click", function(e) {
+		var alert_dialog = Titanium.UI.createAlertDialog({
+			title:'投稿確認',
+			message:e.source.title + "の情報を登録しますか？",
+			buttonNames:["OK", "Cancel"]
+		});
+		alert_dialog.addEventListener(('click', function(ev) {
 			child_win = Titanium.UI.createWindow({
 					title:e.source.title,
 					barColor:'#336699',
-					url:'semi_detail.js'
+					url:'regist.js'
 			});
 			child_win.data = e.source.data_obj;
 			Titanium.UI.currentTab.open(child_win);
-		}
+		})
+		alert_dialog.show();
 	});
 	return annotation;
 }

@@ -45,14 +45,6 @@ function updateStationMap(evt, base_region) {
 		var st_annotations = [];
 		for (var i = 0; i < stations.length; i++) {
 			var st_annotation = createStationAnnotation(stations[i]);
-			st_annotation.addEventListener("click", function(e) {
-				var alert_dialog = Titanium.UI.createAlertDialog({
-					title:'投稿確認',
-					message:e.source.title + "の情報を登録しますか？",
-					buttonNames:["OK", "Cancel"]
-				});
-				alert_dialog.show();
-			});
 			st_annotations.push(st_annotation);
 		}
 		mapview.removeAllAnnotations();
