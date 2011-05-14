@@ -20,7 +20,7 @@ function updateToiletMap(evt, base_region) {
 		var st_annotations = [];
 		var annotations = [];
 		for (keys in stations) {
-			var st_annotation = createStationAnnotation(stations[keys]);
+			var st_annotation = createStationWcAnnotation(stations[keys]);
 			st_annotation.image = "toilet_and_shadow.png";
 			st_annotations.push(st_annotation);
 

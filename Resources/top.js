@@ -233,8 +233,7 @@ Ti.App.addEventListener('setlocation', function(e) {
 		var st_annotations = [];
 		var annotations = [];
 		for (keys in stations) {
-			var st_annotation = createStationAnnotation(stations[keys]);
-			st_annotation.image = "toilet_and_shadow.png";
+			var st_annotation = createStationWcAnnotation(stations[keys]);
 			st_annotations.push(st_annotation);
 
 			appendSuggestRow(stations[keys]);
