@@ -27,6 +27,28 @@ function mapModeEdit() {
 			createLabel();
 		});
 	});
+
+	getStation(mapview.region.latitude, mapview.region.longitude, function(stations) {
+		var st_annotations = [];
+		for (var i = 0; i < stations.length; i++) {
+			var st_annotation = createStationAnnotation(stations[i]);
+			st_annotation.addEventListener("click", function(e) {
+				var alert_dialog = Titanium.UI.createAlertDialog({
+					title:'投稿確認',
+					message:e.source.title + "の情報を登録しますか？",
+					buttonNames:["OK", "Cancel"]
+				});
+				alert_dialog.show();
+			});
+			st_annotations.push(st_annotation);
+		}
+		mapview.removeAllAnnotations();
+		mapview.addAnnotations(st_annotations);
+	});
+
+	//コールバック関数の切り替え
+	mapview.addEventListener('regionChanged', map_edit_callback);
+	mapview.removeEventListener('regionChanged', map_normal_callback);
 }
 
 function tableShow(tb) {

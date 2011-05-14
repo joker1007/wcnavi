@@ -27,7 +27,7 @@ function getStation(lat, lon, callback) {
 	xhr.onload = function(){
 		var result = JSON.parse(this.responseText);
 		if (result.res == 0) {
-			callback(annotations);
+			callback(result.stations);
 		}
 	};
 

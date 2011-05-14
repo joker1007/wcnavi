@@ -117,6 +117,7 @@ function appendSuggestRow(item) {
 Ti.include("lib/map_mode_change.js");
 Ti.include("lib/get_remote_object.js");
 Ti.include("lib/create_annotation.js");
+Ti.include("lib/region_changed_handler.js");
 
 //
 // CREATE MAP VIEW
@@ -132,40 +133,20 @@ var mapview = Titanium.Map.createView({
 	height: 200
 });
 
-
-mapview.addEventListener('regionChanged', function(e) {
-	if (base_region.latitude && base_region.longitude) {
-		var lat_delta = base_region.latitude - e.latitude;
-		var lon_delta = base_region.longitude - e.longitude;
-		var distance = Math.sqrt(Math.pow(lat_delta, 2) + Math.pow(lon_delta, 2));
-		if (distance > 0.02) {
-			getToilet(e.latitude, e.longitude, function(toilets) {
-				base_region.latitude = e.latitude;
-				base_region.longitude = e.longitude;
-				tableview.data = [];
-				var stations = toiletsToStations(toilets);
-				var no_stations = toiletsToNoStationsToilets(toilets);
-				var st_annotations = [];
-				var annotations = [];
-				for (keys in stations) {
-					var st_annotation = createStationAnnotation(stations[keys]);
-					st_annotation.image = "toilet_and_shadow.png";
-					st_annotations.push(st_annotation);
-
-					appendSuggestRow(stations[keys]);
-				}
-				for (var i = 0; i < no_stations.length; i++) {
-					annotations.push(createWcAnnotation(no_stations[i]));
-
-					appendSuggestRow(no_stations[i]);
-				}
-				mapview.removeAllAnnotations();
-				mapview.addAnnotations(st_annotations);
-				mapview.addAnnotations(annotations);
-			});
-		}
+// 後で切り替えるため、コールバック関数を保存
+var map_normal_callback = function(e) {
+	if (checkDistance(e, base_region)) {
+		updateToiletMap(e, base_region);
 	}
-});
+};
+
+var map_edit_callback = function(e) {
+	if (checkDistance(e, base_region)) {
+		updateStationMap(e, base_region);
+	}
+};
+
+mapview.addEventListener('regionChanged', map_normal_callback);
 
 // create table view
 var tableview = Titanium.UI.createTableView({
