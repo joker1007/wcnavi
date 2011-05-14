@@ -5,11 +5,7 @@ function getToilet(lat, lon, callback) {
 	xhr.onload = function(){
 		var result = JSON.parse(this.responseText);
 		if (result.res == 0) {
-			var annotations = [];
-			for (var i = 0; i < result.toilets.length; i++) {
-				annotations.push(createWcAnnotation(result.toilets[i]));
-			}
-			callback(annotations);
+			callback(result.toilets);
 		}
 	};
 
@@ -31,10 +27,6 @@ function getStation(lat, lon, callback) {
 	xhr.onload = function(){
 		var result = JSON.parse(this.responseText);
 		if (result.res == 0) {
-			var annotations = [];
-			for (var i = 0; i < result.stations.length; i++) {
-				annotations.push(createStationAnnotation(result.stations[i]));
-			}
 			callback(annotations);
 		}
 	};

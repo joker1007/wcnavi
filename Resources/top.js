@@ -65,45 +65,57 @@ function getWcName(wc_data) {
 	return wc_data.tname;
 };
 
-function createWcAnnotation(toilet){
-  var annotation = null;
-	if (toilet.stin == Ti.App.ST_STIN) {
-		annotation = Titanium.Map.createAnnotation({
-			latitude:toilet.lat,
-			longitude:toilet.lon,
-			title:toilet.stname,
-			image: "toilet_and_shadow.png",
-			pincolor:Titanium.Map.ANNOTATION_GREEN,
-			animate:true
+function toiletsToStations(toilets) {
+	var stations = {};
+	for (var i = 0; i < toilets.length; i++) {
+		if (toilets[i].stid) {
+			var stid = toilets[i].stid;
+			if (stations[stid]) {
+				stations[stid].toilets.push(toilets[i]);
+			} else {
+				var station = {
+					stid:toilets[i].stid,
+					stname:toilets[i].stname,
+					lat:toilets[i].lat,
+					lon:toilets[i].lon,
+					toilets:[toilets[i]]
+				};
+				stations[stid] = station;
+			}
+		}
+	}
+	return stations;
+}
+
+function toiletsToNoStationsToilets(toilets) {
+	var no_station_toilets = [];
+	toilets.filter(function(toilet, index, array) {
+		return (!toilet.stid);
+	});
+	return no_station_toilets;
+}
+
+function appendSuggestRow(item) {
+	var row = {};
+	if (item.stname) {
+		row = Titanium.UI.createTableViewRow({
+			title:item.stname + "駅"
 		});
 	} else {
-		annotation = Titanium.Map.createAnnotation({
-			latitude:toilet.lat,
-			longitude:toilet.lon,
-			title:toilet.tname,
-			pincolor:Titanium.Map.ANNOTATION_PURPLE,
-			animate:true
+		row = Titanium.UI.createTableViewRow({
+			title:item.tname
 		});
 	}
+	row.hasDetail = true;
+	row.item_obj = item;
 
-	return annotation;
+	tableview.appendRow(row);
 }
 
-function createStationAnnotation(station){
-  var annotation = null;
-	annotation = Titanium.Map.createAnnotation({
-		latitude:station.lat,
-		longitude:station.lon,
-		title:station.stname,
-		pincolor:Titanium.Map.ANNOTATION_GREEN,
-		animate:true
-	});
-	return annotation;
-}
 
 Ti.include("lib/map_mode_change.js");
 Ti.include("lib/get_remote_object.js");
-
+Ti.include("lib/create_annotation.js");
 
 //
 // CREATE MAP VIEW
@@ -119,17 +131,36 @@ var mapview = Titanium.Map.createView({
 	height: 200
 });
 
+
 mapview.addEventListener('regionChanged', function(e) {
 	if (base_region.latitude && base_region.longitude) {
 		var lat_delta = base_region.latitude - e.latitude;
 		var lon_delta = base_region.longitude - e.longitude;
 		var distance = Math.sqrt(Math.pow(lat_delta, 2) + Math.pow(lon_delta, 2));
 		if (distance > 0.02) {
-			getToilet(e.latitude, e.longitude, function(annos) {
+			getToilet(e.latitude, e.longitude, function(toilets) {
 				base_region.latitude = e.latitude;
 				base_region.longitude = e.longitude;
+				tableview.data = [];
+				var stations = toiletsToStations(toilets);
+				var no_stations = toiletsToNoStationsToilets(toilets);
+				var st_annotations = [];
+				var annotations = [];
+				for (keys in stations) {
+					var st_annotation = createStationAnnotation(stations[keys]);
+					st_annotation.image = "toilet_and_shadow.png";
+					st_annotations.push(st_annotation);
+
+					appendSuggestRow(stations[keys]);
+				}
+				for (var i = 0; i < no_stations.length; i++) {
+					annotations.push(createWcAnnotation(no_stations[i]));
+
+					appendSuggestRow(no_stations[i]);
+				}
 				mapview.removeAllAnnotations();
-				mapview.addAnnotations(annos);
+				mapview.addAnnotations(st_annotations);
+				mapview.addAnnotations(annotations);
 			});
 		}
 	}
@@ -139,13 +170,6 @@ mapview.addEventListener('regionChanged', function(e) {
 var tableview = Titanium.UI.createTableView({
 	top: 200
 });
-
-for (var i = 0; i < wc_data.length; i++) {
-	tableview.appendRow(Titanium.UI.createTableViewRow({
-		title:getWcName(wc_data[i]),
-		hasDetail:true
-	}));
-}
 
 // create table view event listener
 tableview.addEventListener('click', function(e)
@@ -159,9 +183,9 @@ tableview.addEventListener('click', function(e)
 	child_win = Titanium.UI.createWindow({
 			title:e.rowData.title,
 			barColor:'#336699',
-			url:'detail.js'
+			url:'semi_detail.js'
 	});
-  child_win.data = wc_data[e.index];
+  child_win.data = e.rowData.item_obj;
 	Titanium.UI.currentTab.open(child_win);
 });
 
@@ -208,13 +232,26 @@ Ti.App.addEventListener('setlocation', function(e) {
 		return;
 	}
 
-	getToilet(e.lat, e.lon, function(e) {
-		mapview.addAnnotations(e);
+	getToilet(e.lat, e.lon, function(toilets) {
+		var stations = toiletsToStations(toilets);
+		var no_stations = toiletsToNoStationsToilets(toilets);
+		var st_annotations = [];
+		var annotations = [];
+		for (keys in stations) {
+			var st_annotation = createStationAnnotation(stations[keys]);
+			st_annotation.image = "toilet_and_shadow.png";
+			st_annotations.push(st_annotation);
+
+			appendSuggestRow(stations[keys]);
+		}
+		for (var i = 0; i < no_stations.length; i++) {
+			annotations.push(createWcAnnotation(no_stations[i]));
+			appendSuggestRow(no_stations[i]);
+		}
+		mapview.addAnnotations(st_annotations);
+		mapview.addAnnotations(annotations);
 	});
 
 });
-
-
-
 
 
