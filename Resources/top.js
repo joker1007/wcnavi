@@ -13,6 +13,7 @@ wc_data = [
 var upload_win = Titanium.UI.createWindow({
 		backgroundImage:'./img/hantomei.png'
 });
+
 var button_win_kai = Titanium.UI.createButton({
 	title:'駅改札内の化粧室',
 	color:'#000000',
@@ -22,11 +23,12 @@ var button_win_kai = Titanium.UI.createButton({
 	left:45,
 	font:{fontSize:18}
 });
-button_win_kai.addEventListener('click', function(e) {
+
+/*button_win_kai.addEventListener('click', function(e) {
 	upload_win.close();
 	mapModeEdit();
 	win.rightNavButton = cancel_button;
-});
+});*/
 
 var button_win_nor= Titanium.UI.createButton({
 	title:'それ以外の化粧室',
@@ -45,8 +47,25 @@ upload_win.add(button_win_nor);
 // NAVIGATION BAR
 var upload_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.COMPOSE});
 upload_button.addEventListener('click', function(e) {
-	upload_win.open();
-});
+
+	var optionsDialogOpts = {
+		options:['駅改札内の化粧室', 'それ以外の化粧室', 'キャンセル'],
+		cancel:2,
+		title:'化粧室登録'
+	};
+
+	var dialog = Titanium.UI.createOptionDialog(optionsDialogOpts);
+
+	dialog.addEventListener('click',function(e){
+		 if(e.index == 0){
+			mapModeEdit();
+			win.rightNavButton = cancel_button;
+		} 
+		});
+		dialog.show();
+	});
+
+
 
 var cancel_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.CANCEL});
 cancel_button.addEventListener('click', function(e) {
