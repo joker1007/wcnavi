@@ -1,80 +1,5 @@
 var win = Titanium.UI.currentWindow;
 
-// LOAD TEST DATA
-var minatomirai = require("minatomirai");
-var yokohama = require("yokohama");
-
-wc_data = [
-	minatomirai,
-	yokohama
-];
-
-// アップロードモード選択ウインドウ
-var upload_win = Titanium.UI.createWindow({
-		backgroundImage:'./img/hantomei.png'
-});
-
-var button_win_kai = Titanium.UI.createButton({
-	title:'駅改札内の化粧室',
-	color:'#000000',
-	height:40,
-	width:230,
-	top:80,
-	left:45,
-	font:{fontSize:18}
-});
-
-/*button_win_kai.addEventListener('click', function(e) {
-	upload_win.close();
-	mapModeEdit();
-	win.rightNavButton = cancel_button;
-});*/
-
-var button_win_nor= Titanium.UI.createButton({
-	title:'それ以外の化粧室',
-	color:'#000000',
-	height:40,
-	width:230,
-	top:160,
-	left:45,
-	font:{fontSize:18}
-});
-
-upload_win.add(button_win_kai);
-upload_win.add(button_win_nor);
-
-
-// NAVIGATION BAR
-var upload_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.COMPOSE});
-upload_button.addEventListener('click', function(e) {
-
-	var optionsDialogOpts = {
-		options:['駅改札内の化粧室', 'それ以外の化粧室', 'キャンセル'],
-		cancel:2,
-		title:'化粧室登録'
-	};
-
-	var dialog = Titanium.UI.createOptionDialog(optionsDialogOpts);
-
-	dialog.addEventListener('click',function(e){
-		 if(e.index == 0){
-			mapModeEdit();
-			win.rightNavButton = cancel_button;
-		} 
-		});
-		dialog.show();
-	});
-
-
-
-var cancel_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.CANCEL});
-cancel_button.addEventListener('click', function(e) {
-	mapModeNormal();
-	win.rightNavButton = upload_button;
-});
-
-win.rightNavButton = upload_button;
-
 
 // FUNCTION DEFINE
 function getWcName(wc_data) {
@@ -132,11 +57,72 @@ function appendSuggestRow(item) {
 	tableview.appendRow(row);
 }
 
-
+// 外部関数定義読み込み
 Ti.include("lib/map_mode_change.js");
 Ti.include("lib/get_remote_object.js");
 Ti.include("lib/create_annotation.js");
 Ti.include("lib/region_changed_handler.js");
+
+
+// アップロードモード選択ウインドウ
+var upload_win = Titanium.UI.createWindow({
+		backgroundImage:'./img/hantomei.png'
+});
+
+var button_win_kai = Titanium.UI.createButton({
+	title:'駅改札内の化粧室',
+	color:'#000000',
+	height:40,
+	width:230,
+	top:80,
+	left:45,
+	font:{fontSize:18}
+});
+
+var button_win_nor = Titanium.UI.createButton({
+	title:'それ以外の化粧室',
+	color:'#000000',
+	height:40,
+	width:230,
+	top:160,
+	left:45,
+	font:{fontSize:18}
+});
+
+upload_win.add(button_win_kai);
+upload_win.add(button_win_nor);
+
+
+// NAVIGATION BAR
+var upload_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.COMPOSE});
+win.rightNavButton = upload_button;
+upload_button.addEventListener('click', function(e) {
+
+	var optionsDialogOpts = {
+		options:['駅改札内の化粧室', 'それ以外の化粧室', 'キャンセル'],
+		cancel:2,
+		title:'化粧室登録'
+	};
+
+	var dialog = Titanium.UI.createOptionDialog(optionsDialogOpts);
+
+	dialog.addEventListener('click',function(e){
+		 if(e.index == 0){
+			mapModeEdit();
+			win.rightNavButton = cancel_button;
+		} 
+	});
+	dialog.show();
+});
+
+var cancel_button = Titanium.UI.createButton({systemButton:Titanium.UI.iPhone.SystemButton.CANCEL});
+cancel_button.addEventListener('click', function(e) {
+	mapModeNormal();
+	win.rightNavButton = upload_button;
+});
+
+
+
 
 //
 // CREATE MAP VIEW
@@ -172,6 +158,28 @@ var tableview = Titanium.UI.createTableView({
 	top: 200
 });
 
+tableview.initTable = function() {
+	this.data = [];
+	// CREATE LABEL
+	var info_row = Titanium.UI.createTableViewRow({
+		height:20,
+		backgroundColor:'#0099ff',
+		className:'guiderow'
+	});
+
+	var info_label = Titanium.UI.createLabel({
+		text:'検索結果',
+		font:{fontSize:14},
+		color:'#fff',
+		shadowColor:'#222',
+		shadowOffset:{x:1,y:1},
+		textAlign:'center'
+	});
+	info_row.add(info_label);
+	this.appendRow(info_row);
+}
+tableview.initTable();
+
 // create table view event listener
 tableview.addEventListener('click', function(e)
 {
@@ -196,7 +204,6 @@ var search = Titanium.UI.createButton({
 });
 
 var location_button = Titanium.UI.createButton({
-//  title:'位置取得',
 	image:'./img/GPS.png',
 	style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
 });
@@ -209,7 +216,6 @@ win.add(tableview);
 
 // GEOLOCATION
 //
-Titanium.Geolocation.purpose = '現在の位置情報を利用して、近くにあるトイレを検索する';
 Ti.include("lib/get_location.js");
 setCurrentPosition();
 

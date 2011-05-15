@@ -14,7 +14,7 @@ function updateToiletMap(evt, base_region) {
 	getToilet(evt.latitude, evt.longitude, function(toilets) {
 		base_region.latitude = evt.latitude;
 		base_region.longitude = evt.longitude;
-		tableview.data = [];
+		tableview.initTable();
 		var stations = toiletsToStations(toilets);
 		var no_stations = toiletsToNoStationsToilets(toilets);
 		var st_annotations = [];

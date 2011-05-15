@@ -3,6 +3,7 @@
 // 利用前にpurposeを宣言すること
 //
 
+Titanium.Geolocation.purpose = '現在の位置情報を利用して、近くにあるトイレを検索する';
 var current_loc = {};
 
 // current_locに現在地を代入
