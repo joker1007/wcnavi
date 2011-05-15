@@ -62,6 +62,7 @@ Ti.include("lib/map_mode_change.js");
 Ti.include("lib/get_remote_object.js");
 Ti.include("lib/create_annotation.js");
 Ti.include("lib/region_changed_handler.js");
+Ti.include("lib/get_location.js");
 
 
 // アップロードモード選択ウインドウ
@@ -207,6 +208,9 @@ var location_button = Titanium.UI.createButton({
 	image:'./img/GPS.png',
 	style:Titanium.UI.iPhone.SystemButtonStyle.BORDERED
 });
+location_button.addEventListener('click', function(e) {
+	setCurrentPosition();
+});
 
 win.setToolbar([location_button, flexible, search]);
 
@@ -216,7 +220,6 @@ win.add(tableview);
 
 // GEOLOCATION
 //
-Ti.include("lib/get_location.js");
 setCurrentPosition();
 
 // 位置情報取得後に表示領域を更新
@@ -238,6 +241,7 @@ Ti.App.addEventListener('setlocation', function(e) {
 		var no_stations = toiletsToNoStationsToilets(toilets);
 		var st_annotations = [];
 		var annotations = [];
+		tableview.initTable();
 		for (keys in stations) {
 			var st_annotation = createStationWcAnnotation(stations[keys]);
 			st_annotations.push(st_annotation);

@@ -15,6 +15,7 @@ function setCurrentPosition() {
 				message: "位置情報の取得に失敗しました",
 				buttonNames:["OK"]
 			});
+			alert_dialog.show();
 			currennt_loc = {lat:35.45777, lon:139.63236};
 		} else {
 			var coords = e.coords;
