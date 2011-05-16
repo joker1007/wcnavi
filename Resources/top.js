@@ -1,29 +1,20 @@
 var win = Titanium.UI.currentWindow;
 
+// CLASS定義読み込み
+var Toilet = require('lib/toilet').toilet;
+var Station = require('lib/station').station;
 
 // FUNCTION DEFINE
-function getWcName(wc_data) {
-	if (wc_data.stin == Ti.App.ST_STIN) {
-		return wc_data.stname;
-	}
-	return wc_data.tname;
-};
-
 function toiletsToStations(toilets) {
-	var stations = {};
+	var stations = [];
 	for (var i = 0; i < toilets.length; i++) {
 		if (toilets[i].stid) {
 			var stid = toilets[i].stid;
 			if (stations[stid]) {
 				stations[stid].toilets.push(toilets[i]);
 			} else {
-				var station = {
-					stid:toilets[i].stid,
-					stname:toilets[i].stname,
-					lat:toilets[i].lat,
-					lon:toilets[i].lon,
-					toilets:[toilets[i]]
-				};
+				var station = new Station(toilets[i]);
+				station.toilets = [toilets[i]]
 				stations[stid] = station;
 			}
 		}
@@ -63,35 +54,6 @@ Ti.include("lib/get_remote_object.js");
 Ti.include("lib/create_annotation.js");
 Ti.include("lib/region_changed_handler.js");
 Ti.include("lib/get_location.js");
-
-
-// アップロードモード選択ウインドウ
-var upload_win = Titanium.UI.createWindow({
-		backgroundImage:'./img/hantomei.png'
-});
-
-var button_win_kai = Titanium.UI.createButton({
-	title:'駅改札内の化粧室',
-	color:'#000000',
-	height:40,
-	width:230,
-	top:80,
-	left:45,
-	font:{fontSize:18}
-});
-
-var button_win_nor = Titanium.UI.createButton({
-	title:'それ以外の化粧室',
-	color:'#000000',
-	height:40,
-	width:230,
-	top:160,
-	left:45,
-	font:{fontSize:18}
-});
-
-upload_win.add(button_win_kai);
-upload_win.add(button_win_nor);
 
 
 // NAVIGATION BAR
@@ -178,18 +140,18 @@ tableview.initTable = function() {
 	});
 	info_row.add(info_label);
 	this.appendRow(info_row);
-}
+};
 tableview.initTable();
 
 // create table view event listener
 tableview.addEventListener('click', function(e)
 {
-	child_win = Titanium.UI.createWindow({
+	var child_win = Titanium.UI.createWindow({
 			title:e.rowData.title,
 			barColor:'#336699',
 			url:'semi_detail.js'
 	});
-  child_win.data = e.rowData.data_obj;
+	child_win.data = e.rowData.data_obj;
 	Titanium.UI.currentTab.open(child_win);
 });
 

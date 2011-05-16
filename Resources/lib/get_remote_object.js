@@ -1,3 +1,7 @@
+// CLASS定義読み込み
+var Toilet = require('lib/toilet').toilet;
+var Station = require('lib/station').station;
+
 function getToilet(lat, lon, callback) {
 	var xhr = Titanium.Network.createHTTPClient();
 	xhr.open('GET', 'http://wcnavix.appspot.com/search?lat='+lat+'&lon='+lon+'&sort=distance');
@@ -5,7 +9,10 @@ function getToilet(lat, lon, callback) {
 	xhr.onload = function(){
 		var result = JSON.parse(this.responseText);
 		if (result.res == 0) {
-			callback(result.toilets);
+			var toilets = result.toilets.map(function(elm) {
+				return new Toilet(elm);
+			});
+			callback(toilets);
 		}
 	};
 
