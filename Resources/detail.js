@@ -35,7 +35,6 @@ var wc_pos_rank = Titanium.UI.createTableViewRow({
 	selectionStyle:Ti.UI.iPhone.TableViewCellSelectionStyle.NONE,
 	className:'valuerow'
 });
-Ti.API.info(win.data);
 var wc_pos_row = Titanium.UI.createTableViewRow({
 	title: '場所: ' + win.data.getWcPos(),
 	height: 30,
@@ -144,12 +143,8 @@ var ToilePosTA1 = Titanium.UI.createTextArea({
 	value:'',
 	height:90,
 	width: 260,
-	font:{fontSize:20,fontFamily:'Marker Felt', fontWeight:'bold'},
 	color:'#888',
 	textAlign:'left',
-	appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,       
-	keyboardType:Titanium.UI.KEYBOARD_NUMBERS_PUNCTUATION,
-	returnKeyType:Titanium.UI.RETURNKEY_EMERGENCY_CALL,
 	borderWidth:2,
 	borderColor:'#bbb',
 	borderRadius:5
