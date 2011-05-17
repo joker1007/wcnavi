@@ -1,0 +1,35 @@
+application: wcnavix
+version: 1
+runtime: python
+api_version: 1
+
+handlers:
+- url: /search
+  script: search.py
+
+- url: /setup
+  script: setup.py
+
+- url: /feedback
+  script: feedback.py
+
+- url: /regist
+  script: regist.py
+
+- url: /lines
+  script: lines.py
+
+- url: /stations
+  script: stations.py
+
+- url: /deleteStation
+  script: deleteStation.py
+
+- url: /setupStation
+  script: setupStation.py
+
+- url: /client
+  static_dir: client
+
+- url: /.*
+  script: not_found.py

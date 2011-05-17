@@ -1,0 +1,103 @@
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<script type="text/javascript" src="http://maps.google.co.jp/maps/api/js?sensor=false">
+</script>
+<script type="text/javascript">
+function initialize() {
+    var ulat = 35.4565056137434;
+    var ulon = 139.633368087769;
+    //---------------------------
+    // JSON
+    var request = new XMLHttpRequest();
+    var url = "../search?lat=35.4565056137434&lon=139.633368087769&sort=distance";
+    var data = "";
+    request.open("GET", url, true);
+    request.onreadystatechange = function() {
+        if (request.readyState == 4 && request.status == 200) {
+            data = request.responseText;
+            document.getElementById('result').value = data;
+            res = eval("("+data+")");
+            document.getElementById('rescode').value = res.toilets.length;
+            //---------------------------
+            var now = new google.maps.LatLng(ulat, ulon);
+            var opts = {
+                zoom: 14,
+                center: now,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(document.getElementById("map"), opts);
+            // 現在位置
+            addUserPos(map, now);
+            // 化粧室
+            ////////////////for toi in res.toilets
+            for(i=0; i<res.toilets.length; i++) {
+                addToilet(map, new google.maps.LatLng(res.toilets[i].lat, res.toilets[i].lon), "xxx");
+            }
+        }
+    }
+    request.send("");
+}
+
+//====================================================
+function addToilet(map, pos, title, exp, x) {
+    if(x==null)   x="";
+    if(exp==null) exp="";
+    var image = new google.maps.MarkerImage("img/toilet"+x+".png",
+        new google.maps.Size(24.0, 32.0),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(12.0, 32.0)
+    );
+    var shadow = new google.maps.MarkerImage("img/toilet_shadow.png",
+        new google.maps.Size(41.0, 32.0),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(12.0, 32.0)
+    );
+    var marker = new google.maps.Marker({
+        position: pos,
+        map: map,
+        icon: image,
+        shadow: shadow,
+        zIndex: 20
+    });
+    google.maps.event.addListener(marker, 'click', function(event) {
+        if(infoWindows) { for(i in infoWindows) { infoWindows[i].close(); } }
+        if(x=="x") s="";
+        else       s="<br><a href=''>ここに行く</a>";
+        var info = new google.maps.InfoWindow({ content: title+exp+s });
+        info.open(map, marker);
+        infoWindows.push(info);
+    });
+}
+//====================================================
+function addUserPos(map, pos) {
+    var image = new google.maps.MarkerImage("img/now.png",
+        new google.maps.Size(120.0, 120.0),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(60.0, 60.0)
+    );
+    var marker = new google.maps.Marker({
+        position: pos,
+        map: map,
+        icon: image,
+        zIndex: 10
+    });
+    google.maps.event.addListener(marker, 'click', function(event) {
+        if(infoWindows) { for(i in infoWindows) { infoWindows[i].close(); } }
+        var info = new google.maps.InfoWindow({
+            content: "現在地",
+            pixelOffset: new google.maps.Size(0, 60)
+        });
+        info.open(map, marker);
+        infoWindows.push(info);
+    });
+}
+</script>
+</head>
+<body onload="initialize()">
+<div id="map" style="width:100%; height:90%;"></div>
+<textarea id="result" style="width:100%; height:200px;"></textarea>
+<textarea id="rescode" style="width:100%; height:200px;"></textarea>
+</body>
+</html>
