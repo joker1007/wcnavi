@@ -1,13 +1,10 @@
 var win = Titanium.UI.currentWindow;
 
-
 var table_data = [];
 
-var rate_label = Titanium.UI.createLabel({
-	height:'auto',
-	width:'auto',
-	left:115,
-	backgroundImage:'./img/35.png'
+var rate_image = Titanium.UI.createImageView({
+	image:'./img/' + win.data.getRateImageName(),
+	height:25
 });
 
 var rate_row = Titanium.UI.createTableViewRow({
@@ -83,7 +80,7 @@ var mapview = Titanium.Map.createView({
 });
 
 
-rate_row.add(rate_label);
+rate_row.add(rate_image);
 wc_pos.add(rate_row);
 
 
@@ -142,7 +139,7 @@ var commentpos_row = Titanium.UI.createTableViewRow({
 var ToilePosTA1 = Titanium.UI.createTextArea({
 	value:'',
 	height:90,
-	width: 260,
+	width: 280,
 	color:'#888',
 	textAlign:'left',
 	borderWidth:2,

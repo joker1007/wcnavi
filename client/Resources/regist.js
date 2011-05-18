@@ -1,5 +1,7 @@
 var win = Titanium.UI.currentWindow;
-var view = Ti.UI.createView({
+var view = Ti.UI.createScrollView({
+	contentHeight:'auto',
+	showVerticalScrollIndicator:true,
 	backgroundGradient:{
 		type:'linear',
 		colors:[
@@ -77,7 +79,7 @@ var wc_line = Ti.UI.createLabel({
 	font:{fontSize:18},
 	height:20,
 	width:'auto',
-	top:10,
+	top:30,
 	left:10,
 	textAlign:'left'
 });
@@ -135,7 +137,7 @@ var wc_pos = Ti.UI.createLabel({
 	font:{fontSize:18},
 	height:20,
 	width:'auto',
-	top:15,
+	top:30,
 	left:10,
 	textAlign:'left'
 });
@@ -196,3 +198,99 @@ var wc_posinfo = Ti.UI.createLabel({
 });
 view.add(wc_posinfo);
 
+var wc_posinfo_area = Titanium.UI.createTextArea({
+	height:100,
+	width:300,
+	top:15,
+	color:'#888',
+	font:{fontSize:18},
+	textAlign:'left',
+	appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
+	returnKeyType:Titanium.UI.RETURNKEY_DONE,
+	borderWidth:2,
+	borderColor:'#bbb',
+	borderRadius:5,
+	suppressReturn:false
+});
+wc_posinfo_area.addEventListener('return', function(e) {
+	e.source.blur();
+});
+
+view.add(wc_posinfo_area);
+
+var rank_object = [
+	{image:'./img/10.png', width:60},
+	{image:'./img/20.png', width:60},
+	{image:'./img/30.png', width:60},
+	{image:'./img/40.png', width:60},
+	{image:'./img/50.png', width:60}
+];
+
+var wc_rate = Ti.UI.createLabel({
+	text:'評価: ',
+	color:'#111',
+	font:{fontSize:18},
+	height:20,
+	width:'auto',
+	top:30,
+	left:10,
+	textAlign:'left'
+});
+view.add(wc_rate);
+
+var wc_rate_bar = Titanium.UI.createTabbedBar({
+	index:2,
+	labels:rank_object,
+	style:Titanium.UI.iPhone.SystemButtonStyle.BAR,
+	backgroundColor:'#33F',
+	backgroundSelectedColor:'#FFF',
+	top:15,
+	height:35,
+	left:10,
+	width:320
+});
+
+view.add(wc_rate_bar);
+
+var wc_comment = Ti.UI.createLabel({
+	text:'投稿者コメント: ',
+	color:'#111',
+	font:{fontSize:18},
+	height:20,
+	width:'auto',
+	top:15,
+	left:10,
+	textAlign:'left'
+});
+view.add(wc_comment);
+
+var wc_comment_area = Titanium.UI.createTextArea({
+	height:100,
+	width:300,
+	top:15,
+	color:'#888',
+	font:{fontSize:18},
+	textAlign:'left',
+	appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,
+	returnKeyType:Titanium.UI.RETURNKEY_DONE,
+	borderWidth:2,
+	borderColor:'#bbb',
+	borderRadius:5,
+	suppressReturn:false
+});
+wc_comment_area.addEventListener('return', function(e) {
+	e.source.blur();
+});
+
+view.add(wc_comment_area);
+
+var send_button = Ti.UI.createButton({
+	title:'登録',
+	top:30,
+	bottom:30,
+	left:10,
+	right:10,
+	height:47
+});
+
+view.add(send_button);
