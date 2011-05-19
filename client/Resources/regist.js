@@ -16,7 +16,7 @@ win.add(view);
 
 function getLines(station, callback) {
 	var xhr = Titanium.Network.createHTTPClient();
-	xhr.open('GET', 'http://wcnavix.appspot.com/lines?stid='+station.stid.toString());
+	xhr.open('GET', 'http://'+Ti.App.ServerHost+'/lines?stid='+station.stid.toString());
 
 	xhr.onload = function() {
 		var result = JSON.parse(this.responseText);

@@ -201,7 +201,7 @@ subpos_button.addEventListener('click', function(e) {
 				var point    = ToilePosTB1.index + 1;
 
 				var xhr = Titanium.Network.createHTTPClient();
-				xhr.open('POST', 'http://wcnavix.appspot.com/feedback');
+				xhr.open('POST', 'http://'+Ti.App.ServerHost+'/feedback');
 				Ti.API.info(tid);
 				Ti.API.info(uid);
 				Ti.API.info(comment);

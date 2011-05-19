@@ -1,3 +1,7 @@
+// Property Loading
+//
+Ti.include("property.js");
+
 // STATUS CONST
 //
 Ti.App.ST_STIN = 1;
@@ -23,34 +27,13 @@ var win1 = Titanium.UI.createWindow({
 		tabBarHidden:true
 });
 
-var win2 = Titanium.UI.createWindow({  
-		title:'sub',
-		backgroundColor:'#fff',
-		barColor:'#336699',
-		tabBarHidden:true
-});
-
 var tab1 = Titanium.UI.createTab({
 		icon:'KS_nav_views.png',
 		title:'検索',
 		window:win1
 });
 
-var tab2 = Titanium.UI.createTab({
-		icon:'KS_nav_views.png',
-		title:'設定',
-		window:win2
-});
-
-var label2 = Titanium.UI.createLabel({
-	color:'#999',
-	text:'I am Window 2',
-	font:{fontSize:20,fontFamily:'Helvetica Neue'}
-});
-
-win2.add(label2);
 
 tabGroup.addTab(tab1);
-tabGroup.addTab(tab2);
 
 tabGroup.open();

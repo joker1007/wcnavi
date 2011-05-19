@@ -85,8 +85,6 @@ cancel_button.addEventListener('click', function(e) {
 });
 
 
-
-
 //
 // CREATE MAP VIEW
 //
@@ -182,7 +180,6 @@ win.add(tableview);
 
 // GEOLOCATION
 //
-setCurrentPosition();
 
 // 位置情報取得後に表示領域を更新
 Ti.App.addEventListener('setlocation', function(e) {
@@ -220,4 +217,5 @@ Ti.App.addEventListener('setlocation', function(e) {
 
 });
 
+setCurrentPosition();
 
